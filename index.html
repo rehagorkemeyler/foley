@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Foley Fun</title>
+<meta name="description" content="Guess the real sound effects from famous cartoons and animated films, and explore animated film posters.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1b1430; --bg2:#271d45; --card:#30255a; --card2:#3b2e6e;
+  --ink:#fff8ec; --muted:#c9bfe6; --line:rgba(255,255,255,.12);
+  --yellow:#ffd23f; --pink:#ff5d8f; --green:#3ddc97; --blue:#4cc9f0; --orange:#ff9f1c; --red:#ff5a5f;
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:radial-gradient(1200px 600px at 10% -10%,#3a2470 0%,transparent 60%),
+             radial-gradient(900px 500px at 110% 10%,#123a5c 0%,transparent 55%),var(--bg);
+  color:var(--ink);font-family:"Nunito",system-ui,sans-serif;min-height:100vh;min-height:100dvh;
+  -webkit-tap-highlight-color:transparent;
+}
+h1,h2,h3,.display{font-family:"Baloo 2","Nunito",sans-serif;line-height:1.05;margin:0}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+a{color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+.hidden{display:none!important}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:12px;padding:12px 16px;max-width:1100px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;white-space:nowrap;font-family:"Baloo 2";font-weight:800;font-size:22px;letter-spacing:.3px}
+.logo .wave{display:flex;gap:3px;align-items:center;height:24px}
+.logo .wave i{width:4px;border-radius:3px;background:var(--yellow);display:block}
+.top nav{margin-left:auto;display:flex;gap:6px}
+.navbtn{padding:8px 14px;border-radius:999px;font-weight:800;font-size:15px;color:var(--muted)}
+.navbtn.on{background:var(--card2);color:var(--ink)}
+
+/* home */
+.hero{text-align:center;padding:28px 8px 10px}
+.hero h1{font-size:clamp(40px,8vw,84px);font-weight:800;
+  background:linear-gradient(90deg,var(--yellow),var(--orange),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:clamp(16px,2.4vw,20px);max-width:620px;margin:10px auto 0}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:28px auto 0;max-width:900px}
+.choice{position:relative;overflow:hidden;border-radius:28px;padding:26px;text-align:left;min-height:230px;
+  display:flex;flex-direction:column;justify-content:flex-end;gap:6px;transition:transform .15s ease}
+.choice:hover{transform:translateY(-4px) rotate(-.4deg)}
+.choice:active{transform:scale(.98)}
+.choice h2{font-size:clamp(28px,4vw,40px);font-weight:800}
+.choice p{margin:0;font-weight:700;opacity:.9}
+.choice .big{position:absolute;top:14px;right:18px;font-size:72px;line-height:1}
+.c-sound{background:linear-gradient(135deg,#ff5d8f,#ff9f1c);color:#2a0d1a}
+.c-poster{background:linear-gradient(135deg,#4cc9f0,#3ddc97);color:#06283a}
+.tip{margin:22px auto 0;max-width:900px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 18px;color:var(--muted);font-weight:600}
+.tip b{color:var(--yellow)}
+
+/* sound game */
+.gamehead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:6px 0 14px}
+.progress{flex:1;min-width:160px;height:12px;background:var(--card);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--pink));width:0;transition:width .4s}
+.qnum{font-family:"Baloo 2";font-weight:800;font-size:20px}
+.teams{display:flex;gap:8px}
+.team{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 6px 4px 14px;font-weight:800}
+.team .pts{font-family:"Baloo 2";font-size:22px;min-width:26px;text-align:center}
+.team button{width:32px;height:32px;border-radius:50%;background:var(--card2);font-weight:800;font-size:18px}
+.team.a .pts{color:var(--yellow)} .team.b .pts{color:var(--blue)}
+
+.stage{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+.screen{position:relative;border-radius:var(--radius);overflow:hidden;background:#000;aspect-ratio:16/9;border:3px solid var(--card2)}
+.screen #yt,.screen iframe{position:absolute;inset:0;width:100%;height:100%}
+.cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:radial-gradient(circle at 50% 40%,#3b2e6e,#1b1430 70%);transition:opacity .4s}
+.cover.gone{opacity:0;pointer-events:none}
+.eq{display:flex;gap:6px;align-items:flex-end;height:70px}
+.eq i{width:10px;border-radius:6px;background:var(--yellow);height:12px;transition:height .1s}
+.eq i:nth-child(2n){background:var(--pink)} .eq i:nth-child(3n){background:var(--blue)}
+.playing .eq i{animation:bounce .7s ease-in-out infinite alternate}
+.eq i:nth-child(1){animation-delay:-.1s}.eq i:nth-child(2){animation-delay:-.5s}.eq i:nth-child(3){animation-delay:-.3s}
+.eq i:nth-child(4){animation-delay:-.65s}.eq i:nth-child(5){animation-delay:-.2s}.eq i:nth-child(6){animation-delay:-.45s}
+.eq i:nth-child(7){animation-delay:-.05s}.eq i:nth-child(8){animation-delay:-.35s}.eq i:nth-child(9){animation-delay:-.55s}
+@keyframes bounce{from{height:10px}to{height:66px}}
+.cover .lbl{font-weight:800;color:var(--muted);letter-spacing:.5px}
+.controls{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:16px;font-weight:800;font-size:17px;
+  background:var(--card2);border:1px solid var(--line);transition:transform .1s}
+.btn:active{transform:scale(.96)}
+.btn.primary{background:var(--yellow);color:#2a1c00;border:0}
+.btn.go{background:var(--green);color:#002a18;border:0}
+.btn:disabled{opacity:.45;cursor:default}
+.btn svg{width:20px;height:20px}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:12px}
+.prompt{font-size:clamp(22px,3vw,30px);font-weight:800}
+.hint{color:var(--muted);font-weight:700;margin-top:-6px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border-radius:16px;background:var(--card2);border:2px solid transparent;font-weight:800;font-size:18px;transition:transform .1s,background .2s}
+.opt:hover{border-color:rgba(255,255,255,.25)}
+.opt .k{flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-family:"Baloo 2";font-size:20px;background:rgba(0,0,0,.25)}
+.opt.right{background:var(--green);color:#002a18}
+.opt.wrong{background:var(--red);color:#2a0000;animation:shake .35s}
+.opt.dim{opacity:.45}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.reveal{border-radius:16px;padding:14px 16px;background:linear-gradient(135deg,rgba(255,210,63,.18),rgba(255,93,143,.18));border:1px solid rgba(255,210,63,.35)}
+.reveal .film{font-family:"Baloo 2";font-weight:800;font-size:24px;color:var(--yellow)}
+.reveal p{margin:4px 0 0;font-weight:600}
+.reveal .foley{margin-top:8px;color:var(--muted);font-size:15px}
+
+.end{text-align:center;padding:30px 10px}
+.end h2{font-size:clamp(36px,6vw,60px);color:var(--yellow)}
+.end p{color:var(--muted);font-size:18px;font-weight:700}
+
+/* posters */
+.gtools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 16px}
+.gtools h2{font-size:clamp(26px,4vw,36px);margin-right:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.pcard{border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--line);transition:transform .15s;text-align:left;padding:0}
+.pcard:hover{transform:translateY(-4px)}
+.pcard img{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--card2)}
+.pcard .cap{padding:10px 12px;font-weight:800}
+.pcard .cap small{display:block;color:var(--muted);font-weight:700}
+
+.show{position:fixed;inset:0;z-index:50;background:rgba(10,6,22,.97);display:flex;flex-direction:column}
+.showtop{display:flex;align-items:center;gap:10px;padding:12px 16px}
+.showtop .count{font-family:"Baloo 2";font-weight:800;font-size:20px;margin-right:auto}
+.showbody{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:28px;padding:0 16px 16px}
+.showbody img{max-height:calc(100vh - 100px);max-height:calc(100dvh - 100px);max-width:min(calc(100vw - 140px),560px);min-width:0;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);object-fit:contain;animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.talk{width:320px;flex:none;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.talk h3{font-size:30px;color:var(--yellow)}
+.talk .meta{color:var(--muted);font-weight:800;margin:2px 0 12px}
+.talk ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.talk li{background:var(--card2);border-radius:12px;padding:10px 12px;font-weight:700}
+.talk li b{display:block;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--blue)}
+.arrow{width:52px;height:52px;border-radius:50%;background:var(--card2);display:grid;place-items:center;font-size:26px;font-weight:800;flex:none}
+
+@media (max-width:820px){
+  .stage{grid-template-columns:1fr}
+  .choices{grid-template-columns:1fr}
+  .choice{min-height:170px}
+  .talk{display:none}
+  .showbody{gap:8px;padding:0 8px 12px}
+  .arrow{width:44px;height:44px}
+  .showbody img{max-width:calc(100vw - 112px)}
+  .top{gap:6px;padding:10px 12px}
+  .logo .wave{display:none}
+  .top nav .navbtn{padding:8px 10px;font-size:14px}
+  .logo{font-size:19px}
+}
+@media (max-width:480px){
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .btn{padding:12px 14px;font-size:15px}
+  .opt{font-size:16px;padding:12px}
+  .teams{width:100%}
+  .team{flex:1;justify-content:space-between}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo"><span class="wave"><i style="height:10px"></i><i style="height:22px"></i><i style="height:14px"></i><i style="height:24px"></i><i style="height:8px"></i></span>Foley Fun</div>
+  <nav>
+    <button class="navbtn on" data-go="home">Home</button>
+    <button class="navbtn" data-go="game">Sounds</button>
+    <button class="navbtn" data-go="posters">Posters</button>
+  </nav>
+</header>
+
+<!-- HOME -->
+<main id="home" class="wrap">
+  <section class="hero">
+    <h1>Foley Fun!</h1>
+    <p>Foley artists make the sounds in films. Listen to real sounds from cartoons and animated films. Can you guess them?</p>
+  </section>
+  <div class="choices">
+    <button class="choice c-sound" data-go="game"><span class="big">🎧</span><h2>Guess the Sound</h2><p>22 real sound effects from cartoons and animated films</p></button>
+    <button class="choice c-poster" data-go="posters"><span class="big">🎬</span><h2>Poster Gallery</h2><p>15 animated film posters</p></button>
+  </div>
+  <div class="tip"><b>Teacher tip:</b> The sounds come from YouTube, so you need an internet connection. Turn the speakers up! In the game, use the + buttons to keep score for two teams.</div>
+</main>
+
+<!-- GAME -->
+<main id="game" class="wrap hidden">
+  <div id="play">
+    <div class="gamehead">
+      <span class="qnum" id="qnum">1 / 22</span>
+      <div class="progress"><i id="bar"></i></div>
+      <div class="teams">
+        <div class="team a">Team A <span class="pts" id="ta">0</span><button data-team="a" aria-label="Add a point for Team A">+</button></div>
+        <div class="team b">Team B <span class="pts" id="tb">0</span><button data-team="b" aria-label="Add a point for Team B">+</button></div>
+      </div>
+    </div>
+    <div class="stage">
+      <div>
+        <div class="screen" id="screen">
+          <div id="yt"></div>
+          <div class="cover" id="cover">
+            <div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="lbl" id="coverlbl">Press PLAY and listen…</div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn primary" id="playbtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Play sound</button>
+          <button class="btn" id="revealbtn">👀 Show the answer</button>
+          <button class="btn go hidden" id="nextbtn">Next ➜</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="prompt" id="prompt"></div>
+        <div class="hint" id="hint"></div>
+        <div class="opts" id="opts"></div>
+        <div class="reveal hidden" id="reveal">
+          <div class="film" id="film"></div>
+          <p id="fact"></p>
+          <div class="foley" id="foley"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="end" class="end hidden">
+    <h2>Well done! 🎉</h2>
+    <p id="endscore"></p>
+    <button class="btn primary" id="again">Play again</button>
+  </div>
+</main>
+
+<!-- POSTERS -->
+<main id="posters" class="wrap hidden">
+  <div class="gtools">
+    <h2>Poster Gallery</h2>
+    <button class="btn primary" id="startshow">▶ Show one by one</button>
+    <a class="btn" href="pdf/animation-posters-A4.pdf" target="_blank" rel="noopener">🖨 A4 PDF (12 posters)</a>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<div class="show hidden" id="show" role="dialog" aria-modal="true" aria-label="Poster slideshow">
+  <div class="showtop">
+    <span class="count" id="scount"></span>
+    <button class="btn" id="auto">⏵ Auto</button>
+    <button class="btn" id="closeshow">✕ Close</button>
+  </div>
+  <div class="showbody" id="showbody">
+    <button class="arrow" id="prev" aria-label="Previous poster">‹</button>
+    <img id="simg" alt="">
+    <div class="talk">
+      <h3 id="stitle"></h3>
+      <div class="meta" id="smeta"></div>
+      <ul>
+        <li><b>Type of film</b>Is it funny, exciting, sad…?</li>
+        <li><b>Story</b>What is it about?</li>
+        <li><b>What you liked</b>The music? The characters? The animation?</li>
+        <li><b>Recommend</b>Would you recommend it? Why?</li>
+      </ul>
+    </div>
+    <button class="arrow" id="next" aria-label="Next poster">›</button>
+  </div>
+</div>
+
+<script>
+/* ---------- data ---------- */
+const SOUNDS = [
+ {id:"LYI0ltuYWIA",s:0,e:11,film:"WALL·E (2008)",q:"What is the robot doing?",opts:["Charging its battery in the sun","Cooking in a microwave","Ringing a doorbell","Taking a photo"],a:0,
+  fact:"WALL·E is charging his battery with sunlight. Listen for the 'fully charged' chime!",foley:"Fun fact: that chime is the old Apple Mac start-up sound."},
+ {id:"rktbUi_wbt0",s:0,e:6,film:"Toy Story (1995)",q:"What is this sound?",opts:["A camera flash","A toy laser","A car horn","A bird singing"],a:1,
+  fact:"Buzz Lightyear shows Woody his 'laser'. It's really just a tiny red light!",foley:"Sound designers make toy sounds with real toys and electronic beeps."},
+ {id:"VF7Q9Wq61d8",s:0,e:5,film:"Monsters, Inc. (2001)",q:"What makes this sound?",opts:["Someone clapping","A drum","A door opening and closing","A book falling"],a:2,
+  fact:"In Monsters, Inc. the monsters go through closet doors into children's bedrooms.",foley:"Foley artists record real doors: they open and slam them again and again."},
+ {id:"61ZAGozUK6w",s:0,e:10,film:"Shrek (2001)",q:"What do you hear?",opts:["Rain on a roof","Bubbles in a muddy pond","A dog drinking water","Frying an egg"],a:1,
+  fact:"Shrek is having a mud bath… and the bubbles are not from the mud! 💨",foley:"A Foley artist can blow through a straw into thick mud or porridge."},
+ {id:"eNiR5ZTb_MA",s:0,e:12,film:"Finding Nemo (2003)",q:"Which animals are these?",opts:["Ducks","Monkeys","Cats","Seagulls"],a:3,
+  fact:"The seagulls only say one word: \"Mine! Mine! Mine!\"",foley:"Animal voices in cartoons are often made by people!"},
+ {id:"TuY456MgMqw",s:0,e:6,film:"Tom and Jerry",q:"What is this sound?",opts:["A frying pan hitting someone","A bell ringing","Thunder","A balloon popping"],a:0,
+  fact:"BONG! Tom gets hit with a frying pan. Poor Tom!",foley:"Foley artists hit real metal pans with a soft hammer."},
+ {id:"8r3IHDr7M2s",s:0,e:5,film:"Tom and Jerry",q:"Who is screaming?",opts:["A baby","A police car","A cat","A parrot"],a:2,
+  fact:"This is Tom's famous scream.",foley:"Fun fact: William Hanna, one of the creators of Tom and Jerry, recorded this scream himself."},
+ {id:"468wUxjLTs0",s:0,e:6,film:"SpongeBob SquarePants",q:"What is this sound?",opts:["A clock ticking","Popcorn popping","Squeaky footsteps","Raindrops"],a:2,
+  fact:"These are SpongeBob's funny, squeaky footsteps.",foley:"Foley artists make footsteps with their own shoes on different floors."},
+ {id:"5fua6h4J7IU",s:9,e:22,film:"The Amazing World of Gumball",q:"What makes this sound?",opts:["Paper tearing","A wallet opening","A zipper","Scissors cutting"],a:1,
+  fact:"Gumball opens his wallet. This sound became a famous meme!",foley:"The sound comes from velcro (cırt cırt) being pulled apart."},
+ {id:"dJZhtcwpsl8",s:0,e:6,film:"Cars (2006)",q:"Who says this?",opts:["Mater","Buzz Lightyear","Woody","Lightning McQueen"],a:3,
+  fact:"\"Ka-chow!\" is Lightning McQueen's famous catchphrase.",foley:"For car films, sound designers record real race car engines."},
+ {id:"AbPSCa7Hd74",s:10,e:17,film:"Despicable Me (2010)",q:"What kind of gun is this?",opts:["A water gun","A fart gun","A jelly gun","A laser gun"],a:1,
+  fact:"Dr. Nefario made a fart gun for Gru. 😂",foley:"Funny sounds like this can be made with a balloon or a whoopee cushion."},
+ {id:"pNEwVhDWPWs",s:43,e:50,film:"Ice Age (2002)",q:"What is this sound?",opts:["Wood burning","Glass breaking","A tree falling","Ice cracking"],a:3,
+  fact:"Scrat pushes his acorn into the ice… and the ice cracks!",foley:"Foley artists twist celery, ice cubes or frozen lettuce to make cracking sounds."},
+ {id:"ffrPb4kG20I",s:17,e:28,film:"Up (2009)",q:"What is happening?",opts:["A ship in a storm","A house flying with balloons","A train arriving","An earthquake"],a:1,
+  fact:"Carl ties thousands of balloons to his house and it flies away!",foley:"Creaking wood is easy to record: just bend an old wooden chair or door."},
+ {id:"ANN4Wzn3IiI",s:7,e:13,film:"How to Train Your Dragon (2010)",q:"What is this sound?",opts:["Fireworks","A cannon","A dragon's fire blast","A thunderstorm"],a:2,
+  fact:"Toothless shoots his powerful plasma blast.",foley:"Monster and dragon sounds are often made by mixing real animal sounds."},
+ {id:"DvI4yeFhLek",s:12,e:24,film:"Despicable Me 2 (2013)",q:"What is the Minion copying?",opts:["A fire truck siren","A doorbell","A phone ringing","A dog barking"],a:0,
+  fact:"\"Bee-do! Bee-do!\" A Minion pretends to be a fire truck.",foley:"The Minions' voices are made by the director, Pierre Coffin!"},
+ {id:"o3i3Ctau4Tg",s:46,e:54,film:"Moana (2016)",q:"What is this sound?",opts:["Footsteps","Knocking on a door","A heartbeat","Drums"],a:3,
+  fact:"The Kakamora (coconut pirates) play drums before they attack Moana's boat.",foley:"Drums create atmosphere: they make a scene exciting or scary."},
+ {id:"XCDKJQ3Z8bU",s:0,e:8,film:"Looney Tunes",q:"What is happening?",opts:["A rocket taking off","Someone falling off a cliff","A bird flying","A kettle boiling"],a:1,
+  fact:"Wile E. Coyote falls off a cliff… again!",foley:"The falling whistle is a classic cartoon sound, made with a slide whistle."},
+ {id:"BipoR8iITfU",s:0,e:5,film:"Looney Tunes",q:"Who makes this sound?",opts:["A duck","A car horn","The Road Runner","A mouse"],a:2,
+  fact:"\"Meep meep!\" The Road Runner always escapes.",foley:"Cartoon characters often have one special sound, like a signature."},
+ {id:"lV7evRdBTxk",s:0,e:5,film:"Scooby-Doo",q:"What is happening?",opts:["A drum roll","A horse galloping","A motorbike","Running away very fast"],a:3,
+  fact:"Scooby-Doo is scared and runs away super fast!",foley:"Fast cartoon running is often made with bongo drums."},
+ {id:"eQaQW4FZUrQ",s:0,e:12,film:"Kung Fu Panda",q:"What is Po doing?",opts:["Eating dumplings","Climbing a lot of stairs","Sleeping","Fighting"],a:1,
+  fact:"Po calls the stairs his \"old enemy\". He is very tired!",foley:"Breathing and footsteps tell us that a character is tired."},
+ {id:"7TYJyCCO8Dc",s:26,e:42,film:"The LEGO Movie (2014)",q:"What does Benny want to build?",opts:["A pizza","A car","A spaceship","A house"],a:2,
+  fact:"Benny LOVES spaceships: \"SPACESHIP!\"",foley:"A happy shout is a sound effect too: it shows how excited Benny is!"},
+ {id:"dIoyCf2W1v4",s:0,e:6,film:"The Amazing World of Gumball",q:"How does this sound make you feel?",opts:["Shocked or surprised","Sleepy","Hungry","Cold"],a:0,
+  fact:"\"Dun dun DUN!\" This music tells us something shocking just happened.",foley:"Sound effects and music create the right atmosphere in a scene."}
+];
+const POSTERS = [
+ ["toy-story-4","Toy Story 4",2019,"Pixar"],["shrek","Shrek",2001,"DreamWorks"],["lego-movie","The LEGO Movie",2014,"Warner Bros."],
+ ["finding-nemo","Finding Nemo",2003,"Pixar"],["frozen","Frozen",2013,"Disney"],["inside-out-2","Inside Out 2",2024,"Pixar"],
+ ["up","Up",2009,"Pixar"],["zootopia","Zootopia",2016,"Disney"],["kung-fu-panda","Kung Fu Panda",2008,"DreamWorks"],
+ ["despicable-me","Despicable Me",2010,"Illumination"],["coco","Coco",2017,"Pixar"],["moana","Moana",2016,"Disney"],
+ ["monsters-inc","Monsters, Inc.",2001,"Pixar"],["wall-e","WALL·E",2008,"Pixar"],["encanto","Encanto",2021,"Disney"]
+];
+
+/* ---------- navigation ---------- */
+const views = ["home","game","posters"];
+function go(v){
+  views.forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==v));
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("on",b.dataset.go===v));
+  if(v!=="game") stopAudio();
+  if(v==="game") ensurePlayer();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+
+/* ---------- YouTube player ---------- */
+let player=null, ready=false, apiLoading=false, endTimer=null;
+function ensurePlayer(){
+  if(apiLoading) return; apiLoading=true;
+  const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s);
+}
+window.onYouTubeIframeAPIReady=function(){
+  player=new YT.Player("yt",{
+    width:"100%",height:"100%",
+    playerVars:{controls:0,disablekb:1,playsinline:1,rel:0,modestbranding:1,fs:0,iv_load_policy:3},
+    events:{
+      onReady:()=>{ready=true; setLabel("Press PLAY and listen…");},
+      onStateChange:e=>{
+        const playing=e.data===YT.PlayerState.PLAYING;
+        $("screen").classList.toggle("playing",playing);
+        if(e.data===YT.PlayerState.ENDED) setLabel(revealed?"":"Press PLAY to listen again");
+      },
+      onError:()=>setLabel("This clip can't play right now. Press ‘Show the answer’ or ‘Next’.")
+    }
+  });
+};
+const $=id=>document.getElementById(id);
+function setLabel(t){$("coverlbl").textContent=t}
+function playClip(){
+  if(!ready){setLabel("Loading… try again in a second");ensurePlayer();return}
+  const c=SOUNDS[order[qi]];
+  player.loadVideoById({videoId:c.id,startSeconds:c.s,endSeconds:c.e});
+  player.unMute(); player.setVolume(100);
+  setLabel(revealed?"":"Listen carefully… 👂");
+  clearTimeout(endTimer);
+  endTimer=setTimeout(()=>{try{player.pauseVideo()}catch(_){} },(c.e-c.s+1.5)*1000);
+}
+function stopAudio(){clearTimeout(endTimer); try{player&&player.pauseVideo()}catch(_){}}
+
+/* ---------- game ---------- */
+let order=[],qi=0,revealed=false,score={a:0,b:0};
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function startGame(){order=shuffle(SOUNDS.map((_,i)=>i));qi=0;score={a:0,b:0};$("ta").textContent=0;$("tb").textContent=0;
+  $("end").classList.add("hidden");$("play").classList.remove("hidden");showQ();}
+function showQ(){
+  const c=SOUNDS[order[qi]]; revealed=false; stopAudio();
+  $("qnum").textContent=`${qi+1} / ${order.length}`;
+  $("bar").style.width=(qi/order.length*100)+"%";
+  $("prompt").textContent=c.q;
+  $("hint").textContent="Listen, then choose an answer.";
+  $("cover").classList.remove("gone"); setLabel(ready?"Press PLAY and listen…":"Loading sounds…");
+  $("reveal").classList.add("hidden"); $("nextbtn").classList.add("hidden"); $("revealbtn").classList.remove("hidden");
+  $("playbtn").lastChild.textContent="Play sound";
+  const box=$("opts"); box.innerHTML="";
+  c.opts.forEach((o,i)=>{
+    const b=document.createElement("button"); b.className="opt";
+    b.innerHTML=`<span class="k">${"ABCD"[i]}</span><span></span>`; b.lastChild.textContent=o;
+    b.onclick=()=>choose(i,b); box.appendChild(b);
+  });
+}
+function choose(i,btn){
+  if(revealed) return;
+  const c=SOUNDS[order[qi]];
+  if(i===c.a){ doReveal(); }
+  else { btn.classList.add("wrong"); btn.disabled=true; }
+}
+function doReveal(){
+  if(revealed) return; revealed=true;
+  const c=SOUNDS[order[qi]];
+  [...$("opts").children].forEach((b,i)=>{b.classList.remove("wrong");b.classList.add(i===c.a?"right":"dim")});
+  $("film").textContent="🎬 "+c.film; $("fact").textContent=c.fact; $("foley").textContent=c.foley;
+  $("reveal").classList.remove("hidden"); $("hint").textContent="";
+  $("cover").classList.add("gone"); setLabel("");
+  $("revealbtn").classList.add("hidden"); $("nextbtn").classList.remove("hidden");
+  $("playbtn").lastChild.textContent="Watch the scene";
+  if(ready) playClip();
+}
+$("playbtn").onclick=playClip;
+$("revealbtn").onclick=doReveal;
+$("nextbtn").onclick=()=>{ if(qi<order.length-1){qi++;showQ()} else endGame(); };
+$("again").onclick=startGame;
+document.querySelectorAll("[data-team]").forEach(b=>b.onclick=()=>{score[b.dataset.team]++;$("t"+b.dataset.team).textContent=score[b.dataset.team]});
+function endGame(){stopAudio();$("bar").style.width="100%";$("play").classList.add("hidden");$("end").classList.remove("hidden");
+  const w=score.a===score.b?"It's a draw!":(score.a>score.b?"Team A wins!":"Team B wins!");
+  $("endscore").textContent=(score.a||score.b)?`Team A: ${score.a} · Team B: ${score.b} — ${w}`:"You listened to all 22 sounds. Great job, Foley artists!";}
+startGame();
+
+/* ---------- posters ---------- */
+const grid=$("grid");
+POSTERS.forEach(([slug,t,y,st],i)=>{
+  const b=document.createElement("button"); b.className="pcard";
+  b.innerHTML=`<img loading="lazy" src="img/${slug}.jpg" alt=""><div class="cap"></div>`;
+  b.querySelector("img").alt=t+" poster"; b.querySelector(".cap").innerHTML=`${t}<small>${y} · ${st}</small>`;
+  b.onclick=()=>openShow(i); grid.appendChild(b);
+});
+let si=0,autoT=null;
+function openShow(i){si=i;$("show").classList.remove("hidden");document.body.style.overflow="hidden";renderShow()}
+function closeShow(){$("show").classList.add("hidden");document.body.style.overflow="";stopAuto()}
+function renderShow(){
+  const [slug,t,y,st]=POSTERS[si]; const img=$("simg");
+  img.style.animation="none"; img.offsetHeight; img.style.animation="";
+  img.src=`img/${slug}.jpg`; img.alt=t+" poster";
+  $("stitle").textContent=t; $("smeta").textContent=`${y} · ${st}`; $("scount").textContent=`${si+1} / ${POSTERS.length}`;
+  const n=POSTERS[(si+1)%POSTERS.length][0]; new Image().src=`img/${n}.jpg`;
+}
+function step(d){si=(si+d+POSTERS.length)%POSTERS.length;renderShow()}
+function stopAuto(){clearInterval(autoT);autoT=null;$("auto").textContent="⏵ Auto"}
+$("startshow").onclick=()=>openShow(0);
+$("closeshow").onclick=closeShow;
+$("prev").onclick=()=>{stopAuto();step(-1)}; $("next").onclick=()=>{stopAuto();step(1)};
+$("auto").onclick=()=>{ if(autoT){stopAuto()} else {autoT=setInterval(()=>step(1),6000);$("auto").textContent="⏸ Pause"} };
+document.addEventListener("keydown",e=>{
+  if($("show").classList.contains("hidden")) return;
+  if(e.key==="ArrowRight"){stopAuto();step(1)} else if(e.key==="ArrowLeft"){stopAuto();step(-1)} else if(e.key==="Escape") closeShow();
+});
+let tx=null;
+$("showbody").addEventListener("touchstart",e=>{tx=e.touches[0].clientX},{passive:true});
+$("showbody").addEventListener("touchend",e=>{ if(tx===null) return; const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>50){stopAuto();step(dx<0?1:-1)} tx=null;});
+</script>
+</body>
+</html>
