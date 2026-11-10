@@ -176,7 +176,7 @@ a{color:inherit}
     <p>Foley artists make the sounds in films. Listen to real sounds from cartoons and animated films. Can you guess them?</p>
   </section>
   <div class="choices">
-    <button class="choice c-sound" data-go="game"><span class="big">🎧</span><h2>Guess the Sound</h2><p>22 real sound effects from cartoons and animated films</p></button>
+    <button class="choice c-sound" data-go="game"><span class="big">🎧</span><h2>Guess the Sound</h2><p>25 real sound effects from cartoons and animated films</p></button>
     <button class="choice c-poster" data-go="posters"><span class="big">🎬</span><h2>Poster Gallery</h2><p>15 animated film posters</p></button>
   </div>
   <div class="tip"><b>Teacher tip:</b> The sounds come from YouTube, so you need an internet connection. Turn the speakers up! In the game, use the + buttons to keep score for two teams.</div>
@@ -186,7 +186,7 @@ a{color:inherit}
 <main id="game" class="wrap hidden">
   <div id="play">
     <div class="gamehead">
-      <span class="qnum" id="qnum">1 / 22</span>
+      <span class="qnum" id="qnum">1 / 25</span>
       <div class="progress"><i id="bar"></i></div>
       <div class="teams">
         <div class="team a">Team A <span class="pts" id="ta">0</span><button data-team="a" aria-label="Add a point for Team A">+</button></div>
@@ -263,7 +263,7 @@ a{color:inherit}
 <script>
 /* ---------- data ---------- */
 const SOUNDS = [
- {id:"LYI0ltuYWIA",s:0,e:11,film:"WALL·E (2008)",q:"What is the robot doing?",opts:["Charging its battery in the sun","Cooking in a microwave","Ringing a doorbell","Taking a photo"],a:0,
+ {id:"K08AaKP8ucc",s:0,e:11,film:"WALL·E (2008)",q:"What is the robot doing?",opts:["Charging its battery in the sun","Cooking in a microwave","Ringing a doorbell","Taking a photo"],a:0,
   fact:"WALL·E is charging his battery with sunlight. Listen for the 'fully charged' chime!",foley:"Fun fact: that chime is the old Apple Mac start-up sound."},
  {id:"rktbUi_wbt0",s:0,e:6,film:"Toy Story (1995)",q:"What is this sound?",opts:["A camera flash","A toy laser","A car horn","A bird singing"],a:1,
   fact:"Buzz Lightyear shows Woody his 'laser'. It's really just a tiny red light!",foley:"Sound designers make toy sounds with real toys and electronic beeps."},
@@ -277,15 +277,15 @@ const SOUNDS = [
   fact:"BONG! Tom gets hit with a frying pan. Poor Tom!",foley:"Foley artists hit real metal pans with a soft hammer."},
  {id:"8r3IHDr7M2s",s:0,e:5,film:"Tom and Jerry",q:"Who is screaming?",opts:["A baby","A police car","A cat","A parrot"],a:2,
   fact:"This is Tom's famous scream.",foley:"Fun fact: William Hanna, one of the creators of Tom and Jerry, recorded this scream himself."},
- {id:"468wUxjLTs0",s:0,e:6,film:"SpongeBob SquarePants",q:"What is this sound?",opts:["A clock ticking","Popcorn popping","Squeaky footsteps","Raindrops"],a:2,
-  fact:"These are SpongeBob's funny, squeaky footsteps.",foley:"Foley artists make footsteps with their own shoes on different floors."},
+ {id:"QoypneKwsx4",s:0,e:8,film:"SpongeBob SquarePants",q:"What makes this sound?",opts:["A cow","A trumpet","A ship's foghorn","A car horn"],a:2,
+  fact:"This loud foghorn is one of SpongeBob's most famous sound effects. It plays when something is really gross or strange!",foley:"A foghorn is a very loud horn that ships use in fog, so other ships can hear them."},
  {id:"5fua6h4J7IU",s:9,e:22,film:"The Amazing World of Gumball",q:"What makes this sound?",opts:["Paper tearing","A wallet opening","A zipper","Scissors cutting"],a:1,
   fact:"Gumball opens his wallet. This sound became a famous meme!",foley:"The sound comes from velcro (cırt cırt) being pulled apart."},
  {id:"dJZhtcwpsl8",s:0,e:6,film:"Cars (2006)",q:"Who says this?",opts:["Mater","Buzz Lightyear","Woody","Lightning McQueen"],a:3,
   fact:"\"Ka-chow!\" is Lightning McQueen's famous catchphrase.",foley:"For car films, sound designers record real race car engines."},
  {id:"AbPSCa7Hd74",s:10,e:17,film:"Despicable Me (2010)",q:"What kind of gun is this?",opts:["A water gun","A fart gun","A jelly gun","A laser gun"],a:1,
   fact:"Dr. Nefario made a fart gun for Gru. 😂",foley:"Funny sounds like this can be made with a balloon or a whoopee cushion."},
- {id:"pNEwVhDWPWs",s:43,e:50,film:"Ice Age (2002)",q:"What is this sound?",opts:["Wood burning","Glass breaking","A tree falling","Ice cracking"],a:3,
+ {id:"4ENyRZ5YCQ4",s:74,e:89,film:"Ice Age (2002)",q:"What is this sound?",opts:["Wood burning","Glass breaking","A tree falling","Ice cracking"],a:3,
   fact:"Scrat pushes his acorn into the ice… and the ice cracks!",foley:"Foley artists twist celery, ice cubes or frozen lettuce to make cracking sounds."},
  {id:"ffrPb4kG20I",s:17,e:28,film:"Up (2009)",q:"What is happening?",opts:["A ship in a storm","A house flying with balloons","A train arriving","An earthquake"],a:1,
   fact:"Carl ties thousands of balloons to his house and it flies away!",foley:"Creaking wood is easy to record: just bend an old wooden chair or door."},
@@ -297,7 +297,7 @@ const SOUNDS = [
   fact:"The Kakamora (coconut pirates) play drums before they attack Moana's boat.",foley:"Drums create atmosphere: they make a scene exciting or scary."},
  {id:"XCDKJQ3Z8bU",s:0,e:8,film:"Looney Tunes",q:"What is happening?",opts:["A rocket taking off","Someone falling off a cliff","A bird flying","A kettle boiling"],a:1,
   fact:"Wile E. Coyote falls off a cliff… again!",foley:"The falling whistle is a classic cartoon sound, made with a slide whistle."},
- {id:"BipoR8iITfU",s:0,e:5,film:"Looney Tunes",q:"Who makes this sound?",opts:["A duck","A car horn","The Road Runner","A mouse"],a:2,
+ {id:"4TnfBpyHD9A",s:0,e:7,film:"Looney Tunes",q:"Who makes this sound?",opts:["A duck","A car horn","The Road Runner","A mouse"],a:2,
   fact:"\"Meep meep!\" The Road Runner always escapes.",foley:"Cartoon characters often have one special sound, like a signature."},
  {id:"lV7evRdBTxk",s:0,e:5,film:"Scooby-Doo",q:"What is happening?",opts:["A drum roll","A horse galloping","A motorbike","Running away very fast"],a:3,
   fact:"Scooby-Doo is scared and runs away super fast!",foley:"Fast cartoon running is often made with bongo drums."},
@@ -306,7 +306,13 @@ const SOUNDS = [
  {id:"7TYJyCCO8Dc",s:26,e:42,film:"The LEGO Movie (2014)",q:"What does Benny want to build?",opts:["A pizza","A car","A spaceship","A house"],a:2,
   fact:"Benny LOVES spaceships: \"SPACESHIP!\"",foley:"A happy shout is a sound effect too: it shows how excited Benny is!"},
  {id:"dIoyCf2W1v4",s:0,e:6,film:"The Amazing World of Gumball",q:"How does this sound make you feel?",opts:["Shocked or surprised","Sleepy","Hungry","Cold"],a:0,
-  fact:"\"Dun dun DUN!\" This music tells us something shocking just happened.",foley:"Sound effects and music create the right atmosphere in a scene."}
+  fact:"\"Dun dun DUN!\" This music tells us something shocking just happened.",foley:"Sound effects and music create the right atmosphere in a scene."},
+ {id:"7SWvm5VdSF0",s:0,e:9,film:"Woody Woodpecker",q:"Who is laughing?",opts:["A woodpecker","A horse","A baby","A monkey"],a:0,
+  fact:"Woody Woodpecker's crazy laugh is one of the most famous laughs in cartoons.",foley:"A woodpecker makes a knocking sound with its beak. Woody also knocks on trees!"},
+ {id:"Cv9CCD8YhQ0",s:0,e:12,film:"Toy Story (1995)",q:"Who says \"Ooooh!\"?",opts:["The Minions","The little green aliens","The seagulls","The monsters"],a:1,
+  fact:"The three-eyed aliens live in a claw machine. They love \"the claw\"! Ooooh!",foley:"Many voices together make a funny group sound."},
+ {id:"eDwgRhJWwNM",s:0,e:12,film:"Zootopia (2016)",q:"Why is this laugh so funny?",opts:["It is very fast","It is very slow","It is very quiet","It is a song"],a:1,
+  fact:"Flash is a sloth. Sloths are very slow, so he laughs very, very slowly!",foley:"Changing the speed of a sound can make it funny or scary."},
 ];
 const POSTERS = [
  ["toy-story-4","Toy Story 4",2019,"Pixar"],["shrek","Shrek",2001,"DreamWorks"],["lego-movie","The LEGO Movie",2014,"Warner Bros."],
@@ -406,7 +412,7 @@ $("again").onclick=startGame;
 document.querySelectorAll("[data-team]").forEach(b=>b.onclick=()=>{score[b.dataset.team]++;$("t"+b.dataset.team).textContent=score[b.dataset.team]});
 function endGame(){stopAudio();$("bar").style.width="100%";$("play").classList.add("hidden");$("end").classList.remove("hidden");
   const w=score.a===score.b?"It's a draw!":(score.a>score.b?"Team A wins!":"Team B wins!");
-  $("endscore").textContent=(score.a||score.b)?`Team A: ${score.a} · Team B: ${score.b} — ${w}`:"You listened to all 22 sounds. Great job, Foley artists!";}
+  $("endscore").textContent=(score.a||score.b)?`Team A: ${score.a} · Team B: ${score.b} — ${w}`:"You listened to all 25 sounds. Great job, Foley artists!";}
 startGame();
 
 /* ---------- posters ---------- */
